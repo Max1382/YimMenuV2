@@ -2,7 +2,6 @@
 
 #include "core/util/Joaat.hpp"
 #include "game/frontend/items/Items.hpp"
-#include "Self/OutfitEditor.hpp"
 #include "Self/Weapons.hpp"
 
 namespace YimMenu::Submenus
@@ -74,7 +73,5 @@ namespace YimMenu::Submenus
 
 		AddCategory(BuildWeaponsMenu());
 
-		auto outfitEditorCategory = YimMenu::CreateOutfitsMenu();
-		AddCategory(std::move(outfitEditorCategory));
 	}
 }

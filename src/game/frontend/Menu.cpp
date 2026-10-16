@@ -3,6 +3,7 @@
 #include "core/renderer/Renderer.hpp"
 #include "game/frontend/fonts/Fonts.hpp"
 #include "submenus/Self.hpp"
+#include "submenus/Clothing.hpp"
 #include "submenus/Vehicle.hpp"
 #include "submenus/Teleport.hpp"
 #include "submenus/Network.hpp"
@@ -19,6 +20,7 @@ namespace YimMenu
 	{
 		// Arguably the only place this file should be edited at for more menus
 		UIManager::AddSubmenu(std::make_shared<Submenus::Self>());
+		UIManager::AddSubmenu(std::make_shared<Submenus::Clothing>());
 		UIManager::AddSubmenu(std::make_shared<Submenus::Vehicle>());
 		UIManager::AddSubmenu(std::make_shared<Submenus::Teleport>());
 		UIManager::AddSubmenu(std::make_shared<Submenus::Network>());

@@ -21,7 +21,7 @@ namespace YimMenu
 			std::unordered_map<int, ComponentData> items = {
 			    {1, {"Mask"}},
 			    {2, {"Hair"}},
-			    {3, {"Torso"}},
+			    {3, {"Gloves"}},
 			    {4, {"Leg"}},
 			    {5, {"Bag"}},
 			    {6, {"Shoe"}},

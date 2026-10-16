@@ -42,6 +42,76 @@ namespace YimMenu
 			}
 		}
 
+		void RenderAppearanceTable()
+		{
+			if (!ImGui::BeginTable("character-outfit", 3, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerH)) return;
+			ImGui::TableSetupColumn("Clothing / prop", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Drawable", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+			ImGui::TableSetupColumn("Texture", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+			ImGui::TableHeadersRow();
+			for (auto& [slot, item] : components.items)
+			{
+				ImGui::PushID(slot);
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::TextUnformatted(item.label.c_str());
+				ImGui::TableSetColumnIndex(1);
+				ImGui::SetNextItemWidth(-1);
+				if (ImGui::InputInt("##drawable", &item.drawable_id, 0, 0))
+				{
+					Outfit::OutfitEditor::CheckBoundsDrawable(item, 0);
+					FiberPool::Push([slot, item, this] {
+						PED::SET_PED_COMPONENT_VARIATION(Self::GetPed().GetHandle(), slot, item.drawable_id, 0, PED::GET_PED_PALETTE_VARIATION(Self::GetPed().GetHandle(), slot));
+						RefreshStats();
+					});
+				}
+				ImGui::TableSetColumnIndex(2);
+				ImGui::SetNextItemWidth(-1);
+				if (ImGui::InputInt("##texture", &item.texture_id, 0, 0))
+				{
+					Outfit::OutfitEditor::CheckBoundsTexture(item, 0);
+					FiberPool::Push([slot, item, this] {
+						PED::SET_PED_COMPONENT_VARIATION(Self::GetPed().GetHandle(), slot, item.drawable_id, item.texture_id, PED::GET_PED_PALETTE_VARIATION(Self::GetPed().GetHandle(), slot));
+						RefreshStats();
+					});
+				}
+				ImGui::PopID();
+			}
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::TextDisabled("Props");
+			for (auto& [slot, item] : props.items)
+			{
+				ImGui::PushID(slot + 100);
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::TextUnformatted(item.label.c_str());
+				ImGui::TableSetColumnIndex(1);
+				ImGui::SetNextItemWidth(-1);
+				if (ImGui::InputInt("##drawable", &item.drawable_id, 0, 0))
+				{
+					Outfit::OutfitEditor::CheckBoundsDrawable(item, -1);
+					FiberPool::Push([slot, item, this] {
+						if (item.drawable_id == -1) PED::CLEAR_PED_PROP(Self::GetPed().GetHandle(), slot, 1);
+						else PED::SET_PED_PROP_INDEX(Self::GetPed().GetHandle(), slot, item.drawable_id, 0, TRUE, 0);
+						RefreshStats();
+					});
+				}
+				ImGui::TableSetColumnIndex(2);
+				ImGui::SetNextItemWidth(-1);
+				if (ImGui::InputInt("##texture", &item.texture_id, 0, 0))
+				{
+					Outfit::OutfitEditor::CheckBoundsTexture(item, -1);
+					FiberPool::Push([slot, item, this] {
+						if (item.drawable_id >= 0) PED::SET_PED_PROP_INDEX(Self::GetPed().GetHandle(), slot, item.drawable_id, item.texture_id, TRUE, 0);
+						RefreshStats();
+					});
+				}
+				ImGui::PopID();
+			}
+			ImGui::EndTable();
+		}
+
 		void RenderComponents()
 		{
 			ImGui::BeginGroup();
@@ -239,7 +309,7 @@ namespace YimMenu
 	std::shared_ptr<Category> CreateOutfitsMenu()
 	{
 		static OutfitEditorMenu editor{};
-		auto category = std::make_shared<Category>("Outfit Editor");
+		auto category = std::make_shared<Category>("Character Outfit");
 
 		category->AddItem(std::make_shared<ImGuiItem>([] {
 			if (ImGui::Button("Refresh Stats"))
@@ -252,17 +322,7 @@ namespace YimMenu
 					Self::GetPed().RandomizeOutfit2();
 				});
 
-			editor.RenderComponents();
-			ImGui::SameLine();
-			editor.RenderComponentsTextures();
-			ImGui::SameLine();
-			ImGui::BeginGroup();
-			{
-				editor.RenderProps();
-				ImGui::Spacing();
-				editor.RenderPropsTextures();
-			}
-			ImGui::EndGroup();
+			editor.RenderAppearanceTable();
 
 			ImGui::Spacing();
 

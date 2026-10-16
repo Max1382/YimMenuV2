@@ -21,7 +21,7 @@ namespace YimMenu
 		auto pos = ImGui::GetCursorPos();
 		if(ImGui::Begin("##ClassicInputWindow", nullptr, flags))
 		{
-			if (ImGui::BeginChild("##submenus", ImVec2(120, ImGui::GetContentRegionAvail().y - 20), true, ImGuiWindowFlags_NoTitleBar))
+			if (ImGui::BeginChild("##submenus", ImVec2(120, ImGui::GetContentRegionAvail().y - 40), true, ImGuiWindowFlags_NoTitleBar))
 			{
 				const auto& submenus = YimMenu::UIManager::GetSubmenus();
 				auto activeSubmenu = YimMenu::UIManager::GetActiveSubmenu();
@@ -38,6 +38,7 @@ namespace YimMenu
 			ImGui::EndChild();
 
 			ImGui::Text("YimMenuV2");
+			ImGui::TextDisabled("Max1382.com");
 
 			pos.y -= 28;
 			ImGui::SetCursorPos(ImVec2(pos.x + 130, pos.y));
