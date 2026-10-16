@@ -26,7 +26,6 @@ The saved-outfit name editor includes symbol, colour and font-code presets. Its 
 
 The Saved Outfits tab can import a selected slot from TXT or JSON and export one slot or all 20 slots as readable TXT and JSON. Exports are saved under the YimMenuV2 data folder in `saved_outfit_exports`. The editor does not use a local outfit JSON file as a substitute for GTA's saved slots. Its direct saved-slot offsets are version-dependent, so a future GTA update may require an offset update.
 
-The separate Maxs submenu and its tools are not part of this fork's active menu.
 
 ## How to use
 
